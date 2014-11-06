@@ -1,8 +1,9 @@
 ---
-  - name: Set hostname
+  - name: Set /etc/hostname
     hostname: name={{ hostname_name }}
     tags: hostname
   
+  # See http://serverfault.com/a/363098 & https://github.com/knopki/ansible-hostname
   - name: Update /etc/hosts with a FQDN
     lineinfile:
       dest=/etc/hosts
