@@ -1,0 +1,25 @@
+---
+  - name: postfix | Install Postfix
+    apt: pkg={{ item }} state=present update_cache=yes
+    with_items:
+      - postfix
+      - postfix-pcre
+      - postfix-mysql
+      - libsasl2-modules
+
+  - name: postfix | Set /etc/mailname to FQDN
+    template: src=mailname.j2 dest=/etc/mailname mode=0644 owner=root group=root
+
+  - name: postfix | Setup main.cf
+    template: src=postfix_main.cf.j2 dest=/etc/postfix/main.cf mode=0644 owner=root group=root
+
+  - name: postfix | Setup master.cf
+    template: src=postfix_master.cf.j2 dest=/etc/postfix/master.cf mode=0644 owner=root group=root
+
+  - name: postfix | Create mime_header_checks
+    template: src=postfix_mime_header_checks.regexp.j2 dest=/etc/postfix/mime_header_checks.regexp mode=0644 owner=root group=root
+    when: mail_banned_attachments|length > 0
+
+  - name: postfix | Create smtp_header_checks
+    copy: src=postfix_smtp_header_checks.pcre dest=/etc/postfix/smtp_header_checks.pcre owner=root group=root mode=0644
+    when: mail_hide_users_ip == 1

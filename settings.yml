@@ -1,0 +1,21 @@
+---
+
+# https://github.com/knopki/ansible-hostname
+#hostname_fqdn: "{{ansible_fqdn}}"
+#hostname_name: "{{hostname_fqdn.split('.').0}}"
+hostname_name: mail
+hostname_fqdn: mail.example.com
+
+# 50 MB
+mail_max_email_size: 51200000
+# See http://serverfault.com/a/413535
+mail_hide_users_ip: 1
+# Set "mail_banned_attachments: []" if you do not want to ban attachments
+mail_banned_attachments:
+  - bat
+  - com
+  - exe
+  - dll
+  - vbs
+# See http://ubuntuforums.org/showthread.php?t=493222
+mail_log_tls_usage: 1

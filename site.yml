@@ -1,0 +1,10 @@
+---
+- hosts: all
+  sudo: true
+  vars_files:
+    - settings.yml
+  roles:
+    - { role: common, tags: common }
+    - { role: mail, tags: mail }
+#    - { role: timezone, timezone: 'Etc/UTC', tags: timezone }
+#    - { role: apticron, tags: apticron}

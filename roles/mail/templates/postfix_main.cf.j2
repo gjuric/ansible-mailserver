@@ -1,0 +1,103 @@
+### Default settings
+
+biff = no
+append_dot_mydomain = no
+delay_warning_time = 4h
+readme_directory = no
+smtpd_banner = $myhostname ESMTP $mail_name
+
+
+
+### Main
+
+myhostname = {{ hostname_fqdn }}
+myorigin = /etc/mailname
+mydestination = 
+relayhost =
+mailbox_size_limit = 0
+recipient_delimiter = +
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+message_size_limit = {{ mail_max_email_size }}
+{% if mail_banned_attachments|length > 0 %}
+mime_header_checks = regexp:/etc/postfix/mime_header_checks.regexp
+{% endif %}
+{% if mail_hide_users_ip == 1 %}
+smtp_header_checks = pcre:/etc/postfix/smtp_header_checks.pcre
+{% endif %}
+
+
+
+
+### TLS 
+
+smtp_tls_security_level = may
+smtpd_tls_security_level = may
+smtpd_tls_key_file = /etc/ssl/private/{{ hostname_fqdn }}.key
+smtpd_tls_cert_file = /etc/ssl/private/{{ hostname_fqdn }}.crt
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+{% if mail_log_tls_usage == 1 %}
+smtpd_tls_loglevel = 1
+smtpd_tls_received_header = yes
+{% endif %}
+
+
+### Network
+
+inet_protocols  = all
+inet_interfaces = all
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
+
+
+
+### SASL
+
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_authenticated_header = yes
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_sasl_security_options = noanonymous
+queue_directory = /var/spool/postfix
+broken_sasl_auth_clients = yes
+
+
+
+### Amavisd-new
+
+content_filter = smtp-amavis:[127.0.0.1]:10024
+
+
+
+### Restrictions
+## This restrictions apply only to incoming email on port 25. For 
+## SASL authenticated users restrictions are redefined in master.cf
+
+smtpd_client_restrictions =
+smtpd_helo_restrictions =
+smtpd_sender_restrictions =
+smtpd_recipient_restrictions =
+    reject_unauth_destination
+    reject_unlisted_recipient
+    check_policy_service inet:127.0.0.1:2501
+#    reject_unauth_pipelining
+#    reject_non_fqdn_sender
+#    reject_unknown_sender_domain
+#    reject_non_fqdn_recipient
+#    reject_unknown_recipient_domain
+    reject_rbl_client zen.spamhaus.org
+    permit
+
+
+
+### Virtual Settings
+
+dovecot_destination_recipient_limit=1
+virtual_transport = dovecot
+
+relay_domains = proxy:mysql:/etc/postfix/sql/relay_domains_maps.cf
+virtual_mailbox_domains = proxy:mysql:/etc/postfix/sql/virtual_domains_maps.cf
+virtual_mailbox_maps = proxy:mysql:/etc/postfix/sql/virtual_mailbox_maps.cf
+virtual_alias_maps =
+    proxy:mysql:/etc/postfix/sql/virtual_alias_mailbox_maps.cf
+    proxy:mysql:/etc/postfix/sql/virtual_alias_maps.cf

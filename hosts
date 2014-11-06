@@ -1,0 +1,2 @@
+[mail]
+mail.host ansible_ssh_host=10.29.10.17 ansible_ssh_user=root ansible_ssh_port=22
