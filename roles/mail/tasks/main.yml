@@ -1,1 +1,2 @@
 - include: postfix.yml tags=postfix
+- include: amavis.yml tags=amavis

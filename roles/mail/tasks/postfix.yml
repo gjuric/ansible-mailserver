@@ -1,6 +1,6 @@
 ---
   - name: postfix | Install Postfix
-    apt: pkg={{ item }} state=present update_cache=yes
+    apt: pkg={{ item }} state=present
     with_items:
       - postfix
       - postfix-pcre
