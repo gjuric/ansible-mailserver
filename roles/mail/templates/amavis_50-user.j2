@@ -8,6 +8,83 @@ use strict;
 # the directives you can use in this file
 #
 
+@local_domains_acl = ( ".$mydomain" );
+
+# Uncomment for low volume mail server
+# http://www.mail-archive.com/amavis-user@lists.sourceforge.net/msg11500.html
+# postfix/smtpd[xxxxx]: timeout after END-OF-MESSAGE from localhost[127.0.0.1]
+#$smtp_connection_cache_enable = 0;
+
+
+# Database
+
+@lookup_sql_dsn =  ( ['DBI:mysql:database={{ amavis_db_name }};host={{ amavis_db_host }};port={{ amavis_db_port }}', '{{ amavis_db_username }}', '{{ amavis_db_password }}']);
+@storage_sql_dsn = @lookup_sql_dsn;
+
+$virus_quarantine_method = 'sql:';
+$spam_quarantine_method = 'sql:';
+$banned_files_quarantine_method = 'sql:';
+$bad_header_quarantine_method = 'sql:';
+
+
+# Default settings (overridden by DB settings)
+
+$sa_spam_subject_tag = 'SPAM > ';
+$sa_tag_level_deflt  = -999;  # add spam info headers if at, or above that level
+$sa_tag2_level_deflt = 5; # add 'spam detected' headers at that level
+$sa_kill_level_deflt = 12; # triggers spam evasive actions
+
+
+# Actions
+
+$final_virus_destiny      = D_DISCARD;  # (data not lost, see virus quarantine)
+$final_banned_destiny     = D_REJECT;   # D_REJECT when front-end MTA
+$final_spam_destiny       = D_DISCARD;
+$final_bad_header_destiny = D_PASS;     # False-positive prone (for spam)
+
+
+# DKIM
+
+$enable_dkim_signing = 1;
+$enable_dkim_verification = 1;
+
+{% for domain in mail_dkim_singend_domains %}
+dkim_key('{{ domain }}', 'mail', '/etc/amavis/dkim/{{ hostname_fqdn }}.pem');
+{% endfor %}
+
+
+# Sockets
+
+$inet_socket_port = [10024,9998,10026];
+
+
+# Quarantine policy
+
+$interface_policy{'9998'} = 'AM.PDP-INET';
+$policy_bank{'AM.PDP-INET'} = {
+  protocol => 'AM.PDP',  # select Amavis policy delegation protocol
+  inet_acl => [qw( 127.0.0.1 [::1] )],  # restrict access to these IP addresses
+# auth_required_release => 0,  # don't require secret_id for amavisd-release
+};
+
+
+# Originating (DKIM signing) policy
+
+$policy_bank{'ORIGINATING'} = {
+  originating => 1, # indicates client is ours, allows signing
+  # force MTA to convert mail to 7-bit before DKIM signing
+  # to avoid later conversions which could destroy signature:
+  smtpd_discard_ehlo_keywords => ['8BITMIME'],
+  #allow_disclaimers => 1, # enables disclaimer insertion if available
+  ## notify administrator of locally originating malware
+  #virus_admin_maps => ["virusalert\@$mydomain"],
+  #spam_admin_maps => ["virusalert\@$mydomain"],
+  #warnbadhsender => 1,
+  #bypass_banned_checks_maps => [1], # allow sending any file names and types
+  ## this should be default
+  #forward_method => ‘smtp:[127.0.0.1]:10025′,
+};
+$interface_policy{'10026'} = 'ORIGINATING';
 
 #------------ Do not modify anything below this line -------------
 1;  # ensure a defined return

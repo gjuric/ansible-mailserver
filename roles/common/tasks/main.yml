@@ -11,3 +11,13 @@
       line="127.0.1.1{% if hostname_name != hostname_fqdn %}{{'\t'}}{{ hostname_fqdn }}{% endif %}{{'\t'}}{{ hostname_name }}"
       state=present
     tags: hostname
+
+  - name: mysql | Install mysql
+    apt: pkg=mysql-server state=present
+    tags: mysql
+
+  - name: mysql | Make sure the service is running
+    service: name=mysql state=started enabled=yes
+    tags: mysql
+
+#TODO: set mysqls root password

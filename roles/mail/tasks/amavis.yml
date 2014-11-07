@@ -20,18 +20,36 @@
 
   - name: amavisd-new | Add user clamav to amavis group
     user: name=clamav groups=amavis append=yes
+    notify: restart clamav
 
   - name: amavisd-new | Add user amavis to clamav group
     user: name=amavis groups=clamav append=yes
+    notify: restart amavis
 
-  - name: amavisd-new | Restart clamav-daemon service
-    service: name=clamav-daemon state=restarted enabled=yes
+  - name: amavisd-new | Create /etc/amavis/dkim folder for storing DKIM keys
+    file: path=/etc/amavis/dkim state=directory
 
-  - name: amavisd-new | Restart amavis service
-    service: name=amavis state=restarted enabled=yes
+  - name: amavisd-new | Create keys for DKIM signing
+    command: /usr/sbin/amavisd-new genrsa /etc/amavis/dkim/{{ hostname_fqdn }}.pem creates=/etc/amavis/dkim/{{ hostname_fqdn }}.pem    
+    notify: restart amavis
 
-  - name: amavisd-new | Stop and disable spamassassin service
-    service: name=spamassassin state=stopped enabled=no
+  - name: amavisd-new | Enable spam and virus checks
+    template: src=amavis_15-content_filter_mode.j2 dest=/etc/amavis/conf.d/15-content_filter_mode mode=0644 owner=root group=root
+    notify: restart amavis
+
+  - name: amavisd-new | Configure amavis
+    template: src=amavis_50-user.j2 dest=/etc/amavis/conf.d/50-user mode=0644 owner=root group=root
+    notify: restart amavis
+
+  - name: amavisd-new | Make sure clamav daemon is automatically started
+    service: name=clamav-daemon enabled=yes
+
+  - name: amavisd-new | Make sure amavis daemon is automatically started
+    service: name=amavis enabled=yes
+
+# Spamassassin daemon is disabled by default
+#  - name: amavisd-new | Stop and disable spamassassin service
+#    service: name=spamassassin state=stopped enabled=no
   
 
 # To enable AWL edit /etc/spamassassin/v310.pre and uncomment:

@@ -1,0 +1,6 @@
+---
+  - name: restart amavis
+    service: name=amavis state=restarted
+
+  - name: restart clamav
+    service: name=clamav-daemon state=restarted

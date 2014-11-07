@@ -19,3 +19,14 @@ mail_banned_attachments:
   - vbs
 # See http://ubuntuforums.org/showthread.php?t=493222
 mail_log_tls_usage: 1
+
+mail_dkim_singend_domains:
+  - example.com
+  - example2.com
+
+
+amavis_db_name: mail_amavis
+amavis_db_host: 127.0.0.1
+amavis_db_port: 3306
+amavis_db_username: amavis
+amavis_db_password: TODO_changethispassword
