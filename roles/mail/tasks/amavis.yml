@@ -1,0 +1,40 @@
+---
+  - name: amavisd-new | Install amavisd-new
+    apt: pkg={{ item }} state=present
+    with_items:
+      - amavisd-new
+      - spamassassin
+# cat spam.txt |pyzor 
+#      - pyzor
+# http://wiki.apache.org/spamassassin/RazorAmavisd
+# http://wiki.apache.org/spamassassin/RazorSiteWide
+#      - razor
+      - clamav-daemon
+      - libmail-dkim-perl
+
+  # For 'rar', 'unrar' and 'lha' you need to add contrib and non-free repositories 
+  # (and also edit amavis config files)
+  - name: amavisd-new | Install unpack utilites
+    apt: pkg={{ item }} state=present
+    with_items: ['arj', 'bzip2', 'cabextract', 'cpio', 'file', 'gzip', 'nomarch', 'pax', 'unzip', 'zip', 'zoo']
+
+  - name: amavisd-new | Add user clamav to amavis group
+    user: name=clamav groups=amavis append=yes
+
+  - name: amavisd-new | Add user amavis to clamav group
+    user: name=amavis groups=clamav append=yes
+
+  - name: amavisd-new | Restart clamav-daemon service
+    service: name=clamav-daemon state=restarted enabled=yes
+
+  - name: amavisd-new | Restart amavis service
+    service: name=amavis state=restarted enabled=yes
+
+  - name: amavisd-new | Stop and disable spamassassin service
+    service: name=spamassassin state=stopped enabled=no
+  
+
+# To enable AWL edit /etc/spamassassin/v310.pre and uncomment:
+# loadplugin Mail::SpamAssassin::Plugin::AWL
+# Edit /etc/spamassassin/local.cf and add:
+# use_auto_whitelist 1
