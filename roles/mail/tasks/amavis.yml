@@ -26,7 +26,7 @@
     user: name=amavis groups=clamav append=yes
     notify: restart amavis
 
-  - name: amavisd-new | Create /etc/amavis/dkim folder for storing DKIM keys
+  - name: amavisd-new | Create /etc/amavis/dkim folder
     file: path=/etc/amavis/dkim state=directory
 
   - name: amavisd-new | Create keys for DKIM signing
@@ -41,10 +41,10 @@
     template: src=amavis_50-user.j2 dest=/etc/amavis/conf.d/50-user mode=0644 owner=root group=root
     notify: restart amavis
 
-  - name: amavisd-new | Make sure clamav daemon is automatically started
+  - name: amavisd-new | Start clamav daemon during boot
     service: name=clamav-daemon enabled=yes
 
-  - name: amavisd-new | Make sure amavis daemon is automatically started
+  - name: amavisd-new | Start amavis daemon during boot
     service: name=amavis enabled=yes
 
 # Spamassassin daemon is disabled by default
