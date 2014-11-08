@@ -48,7 +48,7 @@ $final_bad_header_destiny = D_PASS;     # False-positive prone (for spam)
 $enable_dkim_signing = 1;
 $enable_dkim_verification = 1;
 
-{% for domain in mail_dkim_singend_domains %}
+{% for domain in mail_dkim_signend_domains %}
 dkim_key('{{ domain }}', 'mail', '/etc/amavis/dkim/{{ hostname_fqdn }}.pem');
 {% endfor %}
 

@@ -4,3 +4,10 @@
 
   - name: restart clamav
     service: name=clamav-daemon state=restarted
+
+  - name: copy amavis sql
+    copy: src=amavis.sql dest=/tmp/amavis.sql
+    notify: run amavis import
+
+  - name: run amavis import
+    mysql_db: name={{ amavis_db_name }} state=import target=/tmp/amavis.sql

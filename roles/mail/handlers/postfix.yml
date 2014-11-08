@@ -1,0 +1,13 @@
+---
+  - name: restart postfix
+    service: name=postfix state=restarted
+
+  - name: reload postfix
+    service: name=postfix state=reloaded
+
+  - name: copy postfix sql
+    copy: src=postfix.sql dest=/tmp/postfix.sql
+    notify: run postfix import
+
+  - name: run postfix import
+    mysql_db: name={{ mail_db_name }} state=import target=/tmp/postfix.sql

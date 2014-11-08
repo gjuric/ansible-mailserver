@@ -1,0 +1,48 @@
+#!/usr/bin/php
+<?php
+
+/**
+ * Amavisd-new cleanup script
+ * 
+ * Based on the Amavisd-new documentation shipped with amavisd-new package in
+ * Debian 7.0 (Wheezy). Version of Amavisd-new 2.7.1.
+ *
+ * @author Goran Juric
+ */
+
+define('KEEYP_DAYS', 60);
+
+$prune_older_then = time() - (KEEYP_DAYS * 24 * 60 * 60);
+$last_hour = time() - 3600;
+
+try {
+    $conn = new PDO('mysql:host={{ amavis_db_host }};dbname={{ amavis_db_name }}', "{{ amavis_db_username }}", "{{ amavis_db_password }}");
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Delete old msgs records based on timestamps 
+    $stmt = $conn->prepare('DELETE FROM msgs WHERE time_num < :timestamp');
+    $stmt->bindParam(':timestamp', $prune_older_then);
+    $stmt->execute();
+
+    // Delete leftover msgs records from aborted mail checking operations   
+    $stmt = $conn->prepare('DELETE FROM msgs WHERE time_num < :timestamp AND content IS NULL');
+    $stmt->bindParam(':timestamp', $last_hour);
+    $stmt->execute();
+
+    // Delete unreferenced records from tables msgrcpt, quarantine and maddr
+    $stmt = $conn->prepare('DELETE FROM msgrcpt WHERE NOT EXISTS (SELECT 1 FROM msgs WHERE mail_id=msgrcpt.mail_id)');
+    $stmt->execute();
+
+    $stmt = $conn->prepare('DELETE FROM quarantine WHERE NOT EXISTS (SELECT 1 FROM msgs WHERE mail_id=quarantine.mail_id)');
+    $stmt->execute();
+
+    $stmt = $conn->prepare('DELETE FROM maddr WHERE NOT EXISTS (SELECT 1 FROM msgs WHERE sid=id) AND NOT EXISTS (SELECT 1 FROM msgrcpt WHERE rid=id)');
+    $stmt->execute();   
+
+    // Optimize tables
+    $stmt = $conn->prepare('OPTIMIZE TABLE msgs, msgrcpt, quarantine, maddr');
+    $stmt->execute();
+} catch(PDOException $e) {
+    echo 'ERROR: ' . $e->getMessage();
+    exit(1);
+}

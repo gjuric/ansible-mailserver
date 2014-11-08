@@ -23,3 +23,13 @@
   - name: postfix | Create smtp_header_checks
     copy: src=postfix_smtp_header_checks.pcre dest=/etc/postfix/smtp_header_checks.pcre owner=root group=root mode=0644
     when: mail_hide_users_ip == 1
+
+  - name: postfix | Create mysql database
+    mysql_db: name={{ mail_db_name }} encoding=utf8 collation=utf8_unicode_ci state=present
+    notify: 
+      - copy postfix sql
+      - run postfix import
+
+  - name: postfix | Create mysql user
+    mysql_user: name={{ mail_db_username }} password={{ mail_db_password }} priv={{ mail_db_name }}.*:SELECT state=present
+  

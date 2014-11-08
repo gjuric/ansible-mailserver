@@ -1,5 +1,5 @@
 ---
-  - name: amavisd-new | Install amavisd-new
+  - name: amavisd-new | Install amavisd-new, SpamAssassin and ClamAV
     apt: pkg={{ item }} state=present
     with_items:
       - amavisd-new
@@ -41,17 +41,29 @@
     template: src=amavis_50-user.j2 dest=/etc/amavis/conf.d/50-user mode=0644 owner=root group=root
     notify: restart amavis
 
+  - name: amavisd-new | Create mysql database
+    mysql_db: name={{ amavis_db_name }} encoding=utf8 collation=utf8_unicode_ci state=present
+    notify: 
+      - copy amavis sql
+      - run amavis import
+
+  - name: amavisd-new | Create mysql user
+    mysql_user: name={{ amavis_db_username }} password={{ amavis_db_password }} priv={{ amavis_db_name }}.*:ALL state=present
+
+  - name: amavisd-new | Install database cleanup script into /etc/cron.daily
+    template: src=amavis_cron.j2 dest=/etc/cron.daily/amavis mode=0700 owner=root group=root
+
   - name: amavisd-new | Start clamav daemon during boot
     service: name=clamav-daemon enabled=yes
 
   - name: amavisd-new | Start amavis daemon during boot
     service: name=amavis enabled=yes
 
+
 # Spamassassin daemon is disabled by default
 #  - name: amavisd-new | Stop and disable spamassassin service
 #    service: name=spamassassin state=stopped enabled=no
   
-
 # To enable AWL edit /etc/spamassassin/v310.pre and uncomment:
 # loadplugin Mail::SpamAssassin::Plugin::AWL
 # Edit /etc/spamassassin/local.cf and add:

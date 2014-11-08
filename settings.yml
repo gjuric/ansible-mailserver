@@ -20,7 +20,13 @@ mail_banned_attachments:
 # See http://ubuntuforums.org/showthread.php?t=493222
 mail_log_tls_usage: 1
 
-mail_dkim_singend_domains:
+mail_db_name: mail
+mail_db_host: 127.0.0.1
+mail_db_port: 3306
+mail_db_username: postfix
+mail_db_password: TODO_changethispassword
+
+mail_dkim_signend_domains:
   - example.com
   - example2.com
 
