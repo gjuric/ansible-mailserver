@@ -1,0 +1,10 @@
+---
+  - name: dovecot | Install Dovecot
+    apt: pkg={{ item }} state=present
+    with_items:
+      - dovecot-core
+      - dovecot-mysql
+      - dovecot-imapd
+      - dovecot-pop3d
+      - dovecot-sieve
+      - dovecot-managesieved
