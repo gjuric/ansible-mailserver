@@ -53,12 +53,21 @@
   - name: amavisd-new | Install database cleanup script into /etc/cron.daily
     template: src=amavis_cron.j2 dest=/etc/cron.daily/amavis mode=0700 owner=root group=root
 
+  - name: amavisd-new | Configure SpamAssassin 1
+    lineinfile: dest=/etc/spamassassin/local.cf line="score DKIM_VERIFIED -1"
+
+  - name: amavisd-new | Configure SpamAssassin 2
+    lineinfile: dest=/etc/spamassassin/local.cf line="score DKIM_SIGNED    0"
+
   - name: amavisd-new | Start clamav daemon during boot
     service: name=clamav-daemon enabled=yes
 
   - name: amavisd-new | Start amavis daemon during boot
     service: name=amavis enabled=yes
 
+
+# TODO: update sa rules: http://krischan.eu/index.php/2014/04/21/spamassassin-bug-gpg-validation-failed/
+#       Check /etc/cron.daily/spamassassin for info (sa-update-keys home folder etc.)
 
 # Spamassassin daemon is disabled by default
 #  - name: amavisd-new | Stop and disable spamassassin service
