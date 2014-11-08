@@ -1,4 +1,4 @@
-#connect = host=localhost dbname=mails user=testuser password=pass
+connect = host={{ mail_db_host }} dbname={{ mail_db_name }} user={{ dovecot_db_username }} password={{ dovecot_db_password }}
 
 # CREATE TABLE quota (
 #   username varchar(100) not null,
@@ -9,13 +9,13 @@
 
 map {
   pattern = priv/quota/storage
-  table = quota
+  table = mailbox_usage
   username_field = username
   value_field = bytes
 }
 map {
   pattern = priv/quota/messages
-  table = quota
+  table = mailbox_usage
   username_field = username
   value_field = messages
 }
@@ -27,13 +27,13 @@ map {
 #   primary key (username, mailbox)
 # );
 
-map {
-  pattern = shared/expire/$user/$mailbox
-  table = expires
-  value_field = expire_stamp
-
-  fields {
-    username = $user
-    mailbox = $mailbox
-  }
-}
+#map {
+#  pattern = shared/expire/$user/$mailbox
+#  table = expires
+#  value_field = expire_stamp
+#
+#  fields {
+#    username = $user
+#    mailbox = $mailbox
+#  }
+#}

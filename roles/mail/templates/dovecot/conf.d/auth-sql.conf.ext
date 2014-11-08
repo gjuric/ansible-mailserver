@@ -25,6 +25,6 @@ userdb {
 # by using userdb static instead of userdb sql, for example:
 # <doc/wiki/UserDatabase.Static.txt>
 #userdb {
-  #driver = static
-  #args = uid=vmail gid=vmail home=/var/vmail/%u
+#  driver = static
+#  args = uid=vmail gid=vmail home=/srv/mail/domains/%d/%n
 #}

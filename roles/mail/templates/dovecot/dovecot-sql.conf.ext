@@ -26,7 +26,7 @@
 # );
 
 # Database driver: mysql, pgsql, sqlite
-#driver = 
+driver = mysql
 
 # Database connection string. This is driver-specific setting.
 #
@@ -51,7 +51,7 @@
 #     option_file         - Read options from the given file instead of
 #                           the default my.cnf location
 #     option_group        - Read options from the given group (default: client)
-# 
+#
 #   You can connect to UNIX sockets by using host: host=/var/run/mysql.sock
 #   Note that currently you can't use spaces in parameters.
 #
@@ -63,7 +63,7 @@
 #   connect = host=sql.example.com dbname=virtual user=virtual password=blarg
 #   connect = /etc/dovecot/authdb.sqlite
 #
-#connect =
+connect = host={{ mail_db_host }} dbname={{ mail_db_name }} user={{ dovecot_db_username }} password={{ dovecot_db_password }}
 
 # Default password scheme.
 #
@@ -71,6 +71,7 @@
 # http://wiki2.dovecot.org/Authentication/PasswordSchemes
 #
 #default_pass_scheme = MD5
+default_pass_scheme = SHA512-CRYPT
 
 # passdb query to retrieve the password. It can return fields:
 #   password - The user's password. This field must be returned.
@@ -90,7 +91,7 @@
 #   %u = entire user@domain
 #   %n = user part of user@domain
 #   %d = domain part of user@domain
-# 
+#
 # Note that these can be used only as input to SQL query. If the query outputs
 # any of these substitutions, they're not touched. Otherwise it would be
 # difficult to have eg. usernames containing '%' characters.
@@ -102,6 +103,8 @@
 #password_query = \
 #  SELECT username, domain, password \
 #  FROM users WHERE username = '%n' AND domain = '%d'
+
+password_query = SELECT username as user, password FROM mailbox LEFT JOIN domain on domain.name=mailbox.domain WHERE username='%u' AND domain = '%d' AND mailbox.active = 1 AND domain.active = 1;
 
 # userdb query to retrieve the user information. It can return fields:
 #   uid - System UID (overrides mail_uid setting)
@@ -123,6 +126,12 @@
 #  SELECT home, uid, gid \
 #  FROM users WHERE username = '%n' AND domain = '%d'
 
+user_query = \
+  SELECT CONCAT('/srv/mail/domains/', '%d', '/', '%n', '/maildir') AS home, \
+  5000 AS uid, 5000 as gid, CONCAT('*:storage=', mailbox.quota_mbytes, 'M') AS quota_rule FROM mailbox \
+  LEFT JOIN domain on domain.name=mailbox.domain \
+  WHERE username='%u' AND domain = '%d' AND mailbox.active = 1 AND domain.active = 1;
+
 # If you wish to avoid two SQL lookups (passdb + userdb), you can use
 # userdb prefetch instead of userdb sql in dovecot.conf. In that case you'll
 # also have to return userdb fields in password_query prefixed with "userdb_"
@@ -134,3 +143,4 @@
 
 # Query to get a list of all usernames.
 #iterate_query = SELECT username AS user FROM users
+iterate_query = SELECT mailbox.username AS user FROM mailbox LEFT JOIN domain on mailbox.domain=domain.name WHERE mailbox.active=1 AND domain.active=1

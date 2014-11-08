@@ -36,3 +36,7 @@ amavis_db_host: 127.0.0.1
 amavis_db_port: 3306
 amavis_db_username: amavis
 amavis_db_password: TODO_changethispassword
+
+
+dovecot_db_username: dovecot
+dovecot_db_password: TODO_changethispassword
