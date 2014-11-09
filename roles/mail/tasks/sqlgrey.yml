@@ -1,3 +1,15 @@
 ---
   - name: sqlgrey | Install sqlgrey
     apt: pkg=sqlgrey state=present
+
+  - name: sqlgrey | Create mysql database
+    mysql_db: name={{ greylisting_db_name }} encoding=utf8 collation=utf8_unicode_ci state=present
+    notify: restart sqlgrey
+
+  - name: sqlgrey | Create mysql user
+    mysql_user: name={{ greylisting_db_username }} password={{ greylisting_db_password }} priv={{ greylisting_db_name }}.*:ALL state=present
+    notify: restart sqlgrey
+
+  - name: sqlgrey | Configure sqlgrey
+    template: src=sqlgrey.conf.j2 dest=/etc/sqlgrey/sqlgrey.conf mode=0660 owner=sqlgrey group=sqlgrey
+    notify: restart sqlgrey

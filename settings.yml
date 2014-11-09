@@ -42,3 +42,8 @@ dovecot_db_username: dovecot
 dovecot_db_password: TODO_changethispassword
 
 greylisting: 1
+greylisting_db_name: mail_sqlgrey
+greylisting_db_host: 127.0.0.1
+greylisting_db_port: 3306
+greylisting_db_username: sqlgrey
+greylisting_db_password: TODO_changethispassword
