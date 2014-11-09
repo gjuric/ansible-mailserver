@@ -1,0 +1,6 @@
+user        = {{ mail_db_username }}
+password    = {{ mail_db_password }}
+hosts       = {{ mail_db_host }}
+port        = {{ mail_db_port }}
+dbname      = {{ mail_db_name }}
+query       = SELECT username FROM mailbox,domain WHERE mailbox.username='%s' AND mailbox.active=1 AND domain.name = mailbox.domain AND domain.active=1

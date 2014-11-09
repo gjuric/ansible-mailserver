@@ -34,11 +34,11 @@
     notify: restart amavis
 
   - name: amavisd-new | Enable spam and virus checks
-    template: src=amavis_15-content_filter_mode.j2 dest=/etc/amavis/conf.d/15-content_filter_mode mode=0644 owner=root group=root
+    template: src=amavis/conf.d/15-content_filter_mode.j2 dest=/etc/amavis/conf.d/15-content_filter_mode mode=0644 owner=root group=root
     notify: restart amavis
 
   - name: amavisd-new | Configure amavis
-    template: src=amavis_50-user.j2 dest=/etc/amavis/conf.d/50-user mode=0644 owner=root group=root
+    template: src=amavis/conf.d/50-user.j2 dest=/etc/amavis/conf.d/50-user mode=0644 owner=root group=root
     notify: restart amavis
 
   - name: amavisd-new | Create mysql database
@@ -51,7 +51,7 @@
     mysql_user: name={{ amavis_db_username }} password={{ amavis_db_password }} priv={{ amavis_db_name }}.*:ALL state=present
 
   - name: amavisd-new | Install database cleanup script into /etc/cron.daily
-    template: src=amavis_cron.j2 dest=/etc/cron.daily/amavis mode=0700 owner=root group=root
+    template: src=amavis/cron.j2 dest=/etc/cron.daily/amavis mode=0700 owner=root group=root
 
   - name: amavisd-new | Configure SpamAssassin 1
     lineinfile: dest=/etc/spamassassin/local.cf line="score DKIM_VERIFIED -1"
