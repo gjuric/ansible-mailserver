@@ -2,3 +2,5 @@
   - include: postfix.yml tags=postfix
   - include: amavis.yml tags=amavis
   - include: dovecot.yml tags=dovecot
+  - include: sqlgrey.yml tags=sqlgrey
+    when: greylisting == 1

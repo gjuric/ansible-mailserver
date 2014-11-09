@@ -40,3 +40,5 @@ amavis_db_password: TODO_changethispassword
 
 dovecot_db_username: dovecot
 dovecot_db_password: TODO_changethispassword
+
+greylisting: 1

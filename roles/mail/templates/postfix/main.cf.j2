@@ -79,8 +79,10 @@ smtpd_sender_restrictions =
 smtpd_recipient_restrictions =
     reject_unauth_destination
     reject_unlisted_recipient
+{% if greylisting == 1 %}
 # SQLgrey
     check_policy_service inet:127.0.0.1:2501
+{% endif %}
 #    reject_unauth_pipelining
 #    reject_non_fqdn_sender
 #    reject_unknown_sender_domain

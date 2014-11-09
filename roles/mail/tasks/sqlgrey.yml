@@ -1,0 +1,3 @@
+---
+  - name: sqlgrey | Install sqlgrey
+    apt: pkg=sqlgrey state=present
