@@ -9,5 +9,6 @@
     notify:
       - restart unbound
 
+  # We use the pattern option because init script for unbound is broken on Debian Wheezy
   - name: Start the unbound service
-    service: name=unbound state=started enabled=yes
+    service: name=unbound state=started enabled=yes pattern=/usr/sbin/unbound

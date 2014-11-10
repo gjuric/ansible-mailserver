@@ -14,7 +14,8 @@
 
 ## Spamassassin
 
-    - http://krischan.eu/index.php/2014/04/21/spamassassin-bug-gpg-validation-failed/
+    - TODO: update sa rules: http://krischan.eu/index.php/2014/04/21/spamassassin-bug-gpg-validation-failed/
+      Check /etc/cron.daily/spamassassin for info (sa-update-keys home folder etc.)
     - http://wiki.apache.org/spamassassin/RazorAmavisd
 
 
