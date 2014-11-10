@@ -1,0 +1,13 @@
+---
+  - name: Unbound | Install Unbound
+    apt: pkg=unbound state=present
+
+  - name: Unbound | Set resolv.conf to use localhost for DNS
+    template:
+      src: resolv.conf.j2
+      dest: /etc/resolv.conf
+    notify:
+      - restart unbound
+
+  - name: Start the unbound service
+    service: name=unbound state=started enabled=yes

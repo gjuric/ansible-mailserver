@@ -1,5 +1,8 @@
 ---
 
+# See content of /usr/share/zoneinfo for list of available time zones
+timezone: Etc/UTC
+
 # https://github.com/knopki/ansible-hostname
 #hostname_fqdn: "{{ansible_fqdn}}"
 #hostname_name: "{{hostname_fqdn.split('.').0}}"
