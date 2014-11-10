@@ -5,7 +5,7 @@
     - settings.yml
   roles:
     - { role: common, tags: common }
-    - { role: mail, tags: mail }
-    - { role: ntp, tags: ntp }
-    - { role: unbound, tags: unbound }
     - { role: timezone, tags: timezone }
+    - { role: unbound, tags: unbound }
+    - { role: ntp, tags: ntp }
+    - { role: mail, tags: mail }    

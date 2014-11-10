@@ -15,13 +15,12 @@
 ## Spamassassin
 
     - http://krischan.eu/index.php/2014/04/21/spamassassin-bug-gpg-validation-failed/
-
-
-## Razor
-
     - http://wiki.apache.org/spamassassin/RazorAmavisd
 
 
 ## General
 
     - see what to do with mail to local users (amavis, root, ...)
+    - double check the warning about permissions while starting amavisd-new during boot
+    - move spamassassins bayes data to mysql
+    - ipv6 firewall
