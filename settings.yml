@@ -4,6 +4,7 @@
 #hostname_fqdn: "{{ansible_fqdn}}"
 #hostname_name: "{{hostname_fqdn.split('.').0}}"
 hostname_name: mail
+hostname_domain: example.com
 hostname_fqdn: mail.example.com
 
 # 50 MB
@@ -27,7 +28,7 @@ mail_db_username: postfix
 mail_db_password: TODO_changethispassword
 
 mail_dkim_signend_domains:
-  - example.com
+  - "{{ hostname_domain }}"
   - example2.com
 
 

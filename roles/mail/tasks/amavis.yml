@@ -65,6 +65,12 @@
   - name: amavisd-new | Start amavis daemon during boot
     service: name=amavis enabled=yes
 
+  - name: amavisd-new | Run showkeys
+    command: /usr/sbin/amavisd-new showkeys
+    register: amavisd_keys
+
+  - name: amavisd-new | Display DKIM keys
+    debug: var=amavisd_keys.stdout_lines
 
 # TODO: update sa rules: http://krischan.eu/index.php/2014/04/21/spamassassin-bug-gpg-validation-failed/
 #       Check /etc/cron.daily/spamassassin for info (sa-update-keys home folder etc.)
