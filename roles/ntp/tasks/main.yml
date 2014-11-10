@@ -1,0 +1,11 @@
+---
+  - name: Install ntpdate
+    apt: package=ntpdate state=present update_cache=yes
+
+  - name: Install NTP
+    apt: package=ntp state=present
+    notify:
+      - force ntp update
+
+  - name: Make sure NTP is started up
+    service: name=ntp state=started enabled=yes

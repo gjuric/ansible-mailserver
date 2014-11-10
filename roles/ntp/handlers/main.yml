@@ -1,0 +1,3 @@
+---
+  - name: force ntp update
+    shell: "service ntp stop && ntpdate 0.pool.ntp.org && service ntp start"
