@@ -87,7 +87,7 @@ iptables -A INPUT -p tcp -m tcp --syn --dport 80 -j ACCEPT
 #iptables -A INPUT -p tcp -m tcp --dport 113 -j REJECT --reject-with tcp-reset
 #
 ## Accept imap (port 143)
-iptables -A INPUT -p tcp -m tcp --syn --dport 143 -j ACCEPT
+#iptables -A INPUT -p tcp -m tcp --syn --dport 143 -j ACCEPT
 ## Accept imaps (port 993)
 iptables -A INPUT -p tcp -m tcp --syn --dport 993 -j ACCEPT
 #

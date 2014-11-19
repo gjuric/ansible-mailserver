@@ -51,3 +51,11 @@ greylisting_db_host: 127.0.0.1
 greylisting_db_port: 3306
 greylisting_db_username: sqlgrey
 greylisting_db_password: TODO_changethispassword
+
+roundcube_version: 1.0.3
+
+nginx_vhosts:
+  - roundcube.conf
+  - mail_console.conf
+
+mail_console_port: 10000

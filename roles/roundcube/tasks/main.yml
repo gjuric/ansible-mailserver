@@ -1,0 +1,12 @@
+---
+  - name: Download Roundcube {{ roundcube_version }}
+    get_url:
+      url=http://downloads.sourceforge.net/project/roundcubemail/roundcubemail/{{ roundcube_version }}/roundcubemail-{{ roundcube_version }}.tar.gz?r=&ts=1415714242&use_mirror=kent
+      dest=/usr/local/src/roundcube-{{ roundcube_version }}.tar.gz
+
+  - name: Create /srv/www/public/webmail
+    file: path=/srv/www/public/webmail state=directory
+
+  - name: Unpack Roundcube
+    command: tar  --strip-components=1 --keep-old-files -xzf /usr/local/src/roundcube-{{ roundcube_version }}.tar.gz -C /srv/www/public/webmail creates=/srv/www/public/webmail/index.php
+    # unarchive: src=/usr/local/src/roundcube-{{ roundcube_version }}.tar.gz dest=/usr/local/src/ copy=no

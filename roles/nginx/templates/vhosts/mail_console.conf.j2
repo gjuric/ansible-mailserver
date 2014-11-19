@@ -1,0 +1,37 @@
+server {
+    listen       {{ mail_console_port }} ssl spdy;
+    root         /srv/www/mail_console/current/web;
+
+    # SSL settings
+    ssl_certificate      /etc/ssl/private/{{ hostname_fqdn }}.crt;
+    ssl_certificate_key  /etc/ssl/private/{{ hostname_fqdn }}.key;
+
+    # HSTS header
+    add_header Strict-Transport-Security max-age=31536000;
+
+    # Rewrite resources/<version>/file to /file
+    rewrite ^/resources/([^\/]+)/(.*)$ /$2 permanent;
+
+    location / {
+        try_files $uri /app.php$is_args$args;
+    }
+
+    # Cache static resources
+    location ~* ^.+\.(jpe?g|gif|png|ico|css|js|swf|woff|exe)$ {
+        expires max;
+        access_log off;
+    }
+
+    # Application files
+    location ~ ^/app\.php(/|$) {
+        fastcgi_pass            php-fpm;
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        
+        include                 fastcgi_params;
+        
+        fastcgi_param           SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param           HTTPS on;
+
+        internal;
+    }
+}

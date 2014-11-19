@@ -1,0 +1,51 @@
+server {
+    listen       80 default;
+    return       301 https://$host$request_uri;
+}
+
+server {
+    listen       443 ssl spdy default;
+    root         /srv/www/public;
+    index        index.php index.html index.htm;
+
+    # SSL settings
+    ssl_certificate      /etc/ssl/private/{{ hostname_fqdn }}.crt;
+    ssl_certificate_key  /etc/ssl/private/{{ hostname_fqdn }}.key;
+
+    # HSTS header
+    add_header Strict-Transport-Security max-age=31536000;
+
+    # Deny access to roundcube files
+    location ~ ^/webmail/(README(.md)?|INSTALL|LICENSE|CHANGELOG|UPGRADING)$ {
+        deny all;
+    }
+    location ~ ^/webmail/(bin|SQL|config|logs|temp)/ {
+        deny all;
+    }
+    location ~^/webmail/program/(include|lib|localization|steps)/ {
+        deny all;
+    }
+
+    # Deny access to hidden files
+    location ~ /\. {
+        deny all;
+    }
+
+    # Add expires header to static files
+    location ~* \.(png|gif|jpg|jpeg|css|js|ico)$ {
+        access_log    off;
+        log_not_found off;
+        expires       max;
+    }
+
+    # PHP files
+    location ~ \.php$ {
+        fastcgi_index  index.php;
+
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        fastcgi_param  HTTPS on;
+        include        fastcgi_params;
+
+        fastcgi_pass php-fpm;
+    }
+}
