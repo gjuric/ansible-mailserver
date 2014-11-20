@@ -1,7 +1,7 @@
 ---
 
 # See content of /usr/share/zoneinfo for list of available time zones
-timezone: Etc/UTC
+timezone: UTC
 
 # https://github.com/knopki/ansible-hostname
 #hostname_fqdn: "{{ansible_fqdn}}"
@@ -45,6 +45,7 @@ amavis_db_password: TODO_changethispassword
 dovecot_db_username: dovecot
 dovecot_db_password: TODO_changethispassword
 
+
 greylisting: 1
 greylisting_db_name: mail_sqlgrey
 greylisting_db_host: 127.0.0.1
@@ -52,7 +53,16 @@ greylisting_db_port: 3306
 greylisting_db_username: sqlgrey
 greylisting_db_password: TODO_changethispassword
 
+
 roundcube_version: 1.0.3
+# Must be 24 characters long
+# This key is used to encrypt the users imap password before storing in the session record
+roundcube_des_key: zDyszr8=ze_w+vNLFfdDuq8j
+roundcube_db_name: mail_roundcube
+roundcube_db_host: 127.0.0.1
+roundcube_db_port: 3306
+roundcube_db_username: roundcube
+roundcube_db_password: TODO_changethispassword
 
 nginx_vhosts:
   - roundcube.conf

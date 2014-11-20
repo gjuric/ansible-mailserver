@@ -1,14 +1,14 @@
 ---
-  - name: Check if the given timezone exists
-    stat: path=/usr/share/zoneinfo/{{ timezone }} follow=yes
-    register: tz
+  - name: Install tzdata
+    apt: name=tzdata state=present
 
-  - name: Fail if the given timezone does not exist
-    fail: msg="/usr/share/zoneinfo/{{ timezone }} does not exist. Check /usr/share/zoneinfo for a list of available time zones"
-    when: tz.stat.exists is defined and tz.stat.exists == False
-
-  - name: Set /etc/localtime to {{ timezone }}
-    copy: src=/usr/share/zoneinfo/{{ timezone }} dest=/etc/localtime owner=root group=root mode=0644 backup=yes
+  - name: Stat /usr/share/zoneinfo/{{ timezone }} 
+    stat: path=/usr/share/zoneinfo/{{ timezone }}
+    register: t_zone
+  
+  - name: Check if /usr/share/zoneinfo/{{ timezone }} exists
+    fail: msg="{{ timezone }} is not a valid timezone"
+    when: t_zone.stat.exists is not defined or t_zone.stat.exists == false
   
   - name: Set /etc/timezone to {{ timezone }}
     template: dest=/etc/timezone src=timezone.j2

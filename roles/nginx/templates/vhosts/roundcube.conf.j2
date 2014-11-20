@@ -42,6 +42,11 @@ server {
     location ~ \.php$ {
         fastcgi_index  index.php;
 
+        #http://www.webhostingtalk.com/showthread.php?p=6807475#post6807475
+        if ( $fastcgi_script_name ~ \..*\/.*php ) {
+            return 403;
+        } 
+
         fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
         fastcgi_param  HTTPS on;
         include        fastcgi_params;

@@ -1,0 +1,3 @@
+---
+  - name: run roundcube import
+    mysql_db: name={{ roundcube_db_name }} state=import target=/srv/www/public/webmail/SQL/mysql.initial.sql

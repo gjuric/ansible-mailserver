@@ -1,3 +1,4 @@
+# http://symfony.com/doc/current/cookbook/configuration/web_server_configuration.html
 server {
     listen       {{ mail_console_port }} ssl spdy;
     root         /srv/www/mail_console/current/web;
@@ -17,7 +18,7 @@ server {
     }
 
     # Cache static resources
-    location ~* ^.+\.(jpe?g|gif|png|ico|css|js|swf|woff|exe)$ {
+    location ~* ^.+\.(jpe?g|gif|png|ico|css|js)$ {
         expires max;
         access_log off;
     }
@@ -30,7 +31,6 @@ server {
         include                 fastcgi_params;
         
         fastcgi_param           SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_param           HTTPS on;
 
         internal;
     }

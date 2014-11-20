@@ -10,4 +10,5 @@
     - { role: ntp, tags: ntp }
     - { role: mail, tags: mail }
     - { role: nginx, tags: nginx }
+    - { role: php, tags: php }
     - { role: roundcube, tags: roundcube }
