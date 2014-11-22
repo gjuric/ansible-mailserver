@@ -6,9 +6,10 @@
   roles:
     - { role: common, tags: common }
     - { role: timezone, tags: timezone }
-    - { role: unbound, tags: unbound }
     - { role: ntp, tags: ntp }
-    - { role: mail, tags: mail }
+    - { role: unbound, tags: unbound }
     - { role: nginx, tags: nginx }
     - { role: php, tags: php }
+    - { role: mail, tags: mail }
     - { role: roundcube, tags: roundcube }
+    - { role: sqlgrey_webui, tags: sqlgrey_webui, when: greylisting == 1 }

@@ -1,7 +1,7 @@
 ---
 
 # See content of /usr/share/zoneinfo for list of available time zones
-timezone: UTC
+timezone: Etc/UTC
 
 # https://github.com/knopki/ansible-hostname
 #hostname_fqdn: "{{ansible_fqdn}}"
@@ -52,6 +52,8 @@ greylisting_db_host: 127.0.0.1
 greylisting_db_port: 3306
 greylisting_db_username: sqlgrey
 greylisting_db_password: TODO_changethispassword
+greylisting_web_username: admin
+greylisting_web_password: TODO_changethispassword
 
 
 roundcube_version: 1.0.3
@@ -65,7 +67,7 @@ roundcube_db_username: roundcube
 roundcube_db_password: TODO_changethispassword
 
 nginx_vhosts:
-  - roundcube.conf
+  - default.conf
   - mail_console.conf
 
 mail_console_port: 10000

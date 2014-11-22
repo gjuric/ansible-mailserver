@@ -1,0 +1,21 @@
+---
+  - name: Download sgwi
+    get_url:
+      url: http://www.vanheusden.com/sgwi/sqlgreywebinterface-1.1.6.tgz
+      dest: /usr/local/src/sqlgreywebinterface-1.1.6.tgz
+
+  - name: Create /srv/www/public/sqlgrey
+    file: path=/srv/www/public/sqlgrey state=directory
+
+  - name: Unpack sgwi
+    command: tar --strip-components=1 --keep-old-files -xzf /usr/local/src/sqlgreywebinterface-1.1.6.tgz -C /srv/www/public/sqlgrey creates=/srv/www/public/sqlgrey/index.php
+
+  - name: Generate config.inc.php
+    template: src=config.inc.php dest=/srv/www/public/sqlgrey/includes/config.inc.php
+
+  - name: Install python-passlib to manage htpasswd entries
+    apt: pkg=python-passlib state=present
+
+  - name: Protect sgwi
+    htpasswd: path=/etc/nginx/htpasswd name={{ greylisting_web_username }} password={{ greylisting_web_password }} owner=root group=www-data mode=0640
+    notify: restart nginx
