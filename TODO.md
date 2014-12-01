@@ -2,6 +2,10 @@
 
 ## Apps
 
+    - Prosody
+    - mail_console
+
+
 ## Dovecot
 
     - use only one query to check password and fetch user data

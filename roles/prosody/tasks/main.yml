@@ -1,0 +1,25 @@
+---
+  - name: Install Prosody repository key
+    apt_key: 
+      id: 74D9DBB5
+      url: https://prosody.im/files/prosody-debian-packages.key
+      state: present
+
+  - name: Add official Prosody repository
+    apt_repository:
+      repo: "{{ item }}"
+      state: present
+      update_cache: yes
+    with_items:
+      - deb http://packages.prosody.im/debian wheezy main
+
+  - name: Install Prosody
+    apt: pkg=prosody state=installed
+
+  - name: Configure Prosody
+    template: src=prosody.conf.j2 dest=/etc/prosody/prosody.conf
+    notify:
+      - restart prosody
+
+  - name: Start the Prosody service
+    service: name=prosody state=started enabled=yes pattern=/usr/bin/prosody

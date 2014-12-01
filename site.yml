@@ -13,3 +13,4 @@
     - { role: mail, tags: mail }
     - { role: roundcube, tags: roundcube }
     - { role: sqlgrey_webui, tags: sqlgrey_webui, when: greylisting == 1 }
+    - { role: prosody, tags: prosody, when: xmpp == 1 }

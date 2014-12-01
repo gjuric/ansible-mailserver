@@ -71,3 +71,9 @@ nginx_vhosts:
   - mail_console.conf
 
 mail_console_port: 10000
+
+xmpp: 1
+xmpp_db_name: mail_amavis
+xmpp_db_host: localhost
+xmpp_db_username: amavis
+xmpp_db_password: TODO_changethispassword
