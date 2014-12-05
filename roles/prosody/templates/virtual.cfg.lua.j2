@@ -1,0 +1,7 @@
+----------- Virtual hosts -----------
+-- You need to add a VirtualHost entry for each domain you wish Prosody to serve.
+-- Settings under each VirtualHost entry apply *only* to that host.
+
+{% for domain in xmpp_domains %}
+VirtualHost "{{ domain }}"
+{% endfor %}

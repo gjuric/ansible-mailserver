@@ -16,8 +16,21 @@
   - name: Install Prosody
     apt: pkg=prosody state=installed
 
+  - name: Install lua-dbi-mysql
+    apt: pkg=lua-dbi-mysql state=installed
+
   - name: Configure Prosody
     template: src=prosody.conf.j2 dest=/etc/prosody/prosody.conf
+    notify:
+      - restart prosody
+
+  - name: Configure Prosody components
+    template: src=components.cfg.lua.j2 dest=/etc/prosody/conf.d/components.cfg.lua
+    notify:
+      - restart prosody
+
+  - name: Configure Prosody virtual hosts
+    template: src=virtual.cfg.lua.j2 dest=/etc/prosody/conf.d/virtual.cfg.lua
     notify:
       - restart prosody
 

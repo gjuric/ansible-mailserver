@@ -2,14 +2,25 @@
 
 ## Apps
 
-    - Prosody
     - mail_console
+    - fail2ban
 
 
 ## Dovecot
 
+    - set default folder names http://apple.stackexchange.com/questions/105145/what-are-the-default-special-folder-names-for-imap-accounts-in-mail-app-like-dr
     - use only one query to check password and fetch user data
     - move quota to redis
+
+
+## Roundcube
+
+    - set default folder names to match the ones from Dovecot
+
+
+## Prosody
+
+    - https://code.google.com/p/prosody-modules/wiki/mod_log_auth + fail2ban rules
 
 
 ## SQLGrey

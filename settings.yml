@@ -77,3 +77,5 @@ xmpp_db_name: mail_amavis
 xmpp_db_host: localhost
 xmpp_db_username: amavis
 xmpp_db_password: TODO_changethispassword
+xmpp_domains:
+  - "{{ hostname_domain }}"

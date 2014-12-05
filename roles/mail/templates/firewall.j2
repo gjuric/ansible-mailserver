@@ -108,6 +108,10 @@ iptables -A INPUT -p tcp -m tcp --syn --dport 443 -j ACCEPT
 ## Accept mysql (port 3306)
 #iptables -A INPUT -p tcp -m tcp --syn --dport 3306 -j ACCEPT
 #
+## Accept XMPP (ports 5222 & 5269)
+{% if xmpp != 1%}#{% endif %}iptables -A INPUT -p tcp -m tcp --syn --dport 5222 -j ACCEPT
+{% if xmpp != 1%}#{% endif %}iptables -A INPUT -p tcp -m tcp --syn --dport 5269 -j ACCEPT
+#
 ## Allow inbound established and related outside communication
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 #
