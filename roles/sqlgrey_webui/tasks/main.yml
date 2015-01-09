@@ -1,14 +1,14 @@
 ---
   - name: Download sgwi
     get_url:
-      url: http://www.vanheusden.com/sgwi/sqlgreywebinterface-1.1.6.tgz
-      dest: /usr/local/src/sqlgreywebinterface-1.1.6.tgz
+      url: http://www.vanheusden.com/sgwi/sqlgreywebinterface-1.1.7.tar.gz
+      dest: /usr/local/src/sqlgreywebinterface-1.1.7.tar.gz
 
   - name: Create /srv/www/public/sqlgrey
     file: path=/srv/www/public/sqlgrey state=directory
 
   - name: Unpack sgwi
-    command: tar --strip-components=1 --keep-old-files -xzf /usr/local/src/sqlgreywebinterface-1.1.6.tgz -C /srv/www/public/sqlgrey creates=/srv/www/public/sqlgrey/index.php
+    command: tar --strip-components=1 --keep-old-files -xzf /usr/local/src/sqlgreywebinterface-1.1.7.tar.gz -C /srv/www/public/sqlgrey creates=/srv/www/public/sqlgrey/index.php
 
   - name: Generate config.inc.php
     template: src=config.inc.php dest=/srv/www/public/sqlgrey/includes/config.inc.php
