@@ -6,6 +6,11 @@
     - fail2ban
 
 
+## amavisd-new
+
+    - configure number of processes spawned (see end of https://help.ubuntu.com/community/PostfixAmavisNew)
+
+
 ## Dovecot
 
     - set default folder names http://apple.stackexchange.com/questions/105145/what-are-the-default-special-folder-names-for-imap-accounts-in-mail-app-like-dr
