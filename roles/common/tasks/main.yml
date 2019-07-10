@@ -1,17 +1,4 @@
 ---
-  - name: Set /etc/hostname
-    hostname: name={{ hostname_name }}
-    tags: hostname
-  
-  # See http://serverfault.com/a/363098 & https://github.com/knopki/ansible-hostname
-  - name: Update /etc/hosts with a FQDN
-    lineinfile:
-      dest=/etc/hosts
-      regexp="^127\.0\.1\.1"
-      line="127.0.1.1{% if hostname_name != hostname_fqdn %}{{'\t'}}{{ hostname_fqdn }}{% endif %}{{'\t'}}{{ hostname_name }}"
-      state=present
-    tags: hostname
-
   - name: mysql | Install mysql
     apt: pkg=mysql-server state=present
     tags: mysql

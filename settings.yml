@@ -3,12 +3,9 @@
 # See content of /usr/share/zoneinfo for list of available time zones
 timezone: Etc/UTC
 
-# https://github.com/knopki/ansible-hostname
-#hostname_fqdn: "{{ansible_fqdn}}"
-#hostname_name: "{{hostname_fqdn.split('.').0}}"
-hostname_name: mail
+hostname_host: mail
 hostname_domain: example.com
-hostname_fqdn: mail.example.com
+hostname_fqdn: "{{hostname_host}}.{{hostname_domain}}"
 
 # 50 MB
 mail_max_email_size: 51200000
@@ -32,7 +29,6 @@ mail_db_password: TODO_changethispassword
 
 mail_dkim_signend_domains:
   - "{{ hostname_domain }}"
-  - example2.com
 
 
 amavis_db_name: mail_amavis

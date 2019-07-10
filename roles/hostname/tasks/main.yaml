@@ -1,0 +1,17 @@
+---  
+  - name: Install dbus # So we can use the hostname ansible module
+    apt:
+      pkg: dbus
+      state: present
+
+  - name: Set FQDN hostname to "{{hostname_fqdn}}"
+    hostname: 
+      name: "{{hostname_fqdn}}"
+
+  # See http://serverfault.com/a/363098 & https://github.com/knopki/ansible-hostname
+  - name: Update /etc/hosts with a FQDN
+    lineinfile:
+      dest: /etc/hosts
+      regexp: '^127\.0\.1\.1'
+      line: "127.0.1.1{% if hostname_host != hostname_fqdn %}{{'\t'}}{{ hostname_fqdn }}{% endif %}{{'\t'}}{{ hostname_host }}"
+      state: present
