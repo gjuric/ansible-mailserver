@@ -10,6 +10,6 @@
     fail: msg="{{ timezone }} is not a valid timezone"
     when: t_zone.stat.exists is not defined or t_zone.stat.exists == false
   
-  - name: Set /etc/timezone to {{ timezone }}
-    template: dest=/etc/timezone src=timezone.j2
-    notify: update tzdata
+  - name: Set timezone to "{{timezone}}"
+    timezone:
+      name: "{{timezone}}"
