@@ -1,14 +1,16 @@
 ---
-  - name: Unbound | Install Unbound
-    apt: pkg=unbound state=present
+  - name: Install Unbound
+    apt:
+      pkg: unbound
+      state: present
 
-  - name: Unbound | Set resolv.conf to use localhost for DNS
+  - name: Set resolv.conf to use localhost for DNS
     template:
       src: resolv.conf.j2
       dest: /etc/resolv.conf
-    notify:
-      - restart unbound
 
-  # We use the pattern option because init script for unbound is broken on Debian Wheezy
-  - name: Start the unbound service
-    service: name=unbound state=started enabled=yes pattern=/usr/sbin/unbound
+  - name: Start the service
+    service: 
+      name: unbound
+      state: started
+      enabled: yes
