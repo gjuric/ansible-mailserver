@@ -1,33 +1,13 @@
 ---
-  - name: Install nginx.org key
-    apt_key: 
-      id: 7BD9BF62
-      url: http://nginx.org/keys/nginx_signing.key
-      state: present
-
-  - name: Add official nginx repository
-    apt_repository:
-      repo: "{{ item }}"
-      state: present
-      update_cache: yes
-    with_items:
-      - deb http://nginx.org/packages/debian/ wheezy nginx
-      - deb-src http://nginx.org/packages/debian/ wheezy nginx
-
   - name: Install nginx
-    apt: pkg=nginx state=installed
-
-  - name: Create the directories for site specific configurations
-    file: path=/etc/nginx/{{ item }} state=directory owner=root group=root mode=0755
-    with_items:
-      - "sites-available"
-      - "sites-enabled"
-
-  - name: Delete conf.d folder
-    file: path=/etc/nginx/conf.d state=absent
+    apt:
+      pkg: nginx-light
+      state: present
 
   - name: Create /srv/www/public
-    file: path=/srv/www/public state=directory
+    file:
+      path: /srv/www/public
+      state: directory
 
   - name: Copy the nginx configuration file
     template:
@@ -36,17 +16,30 @@
     notify:
      - restart nginx
 
-  - name: Create a {{ nginx_vhosts }} host in sites-available
+  - name: Create config files in conf.d
     template:
-      src: vhosts/{{item}}.j2
-      dest: /etc/nginx/sites-available/{{item}}
-    with_items: nginx_vhosts
+      src: conf.d/{{item}}.j2
+      dest: /etc/nginx/conf.d/{{item}}
+    with_items:
+      - ssl.conf
+      - php.conf
     notify:
       - restart nginx
 
-  - name: Link {{ nginx_vhosts }} to sites-enabled
-    action: file src=/etc/nginx/sites-available/{{item}} dest=/etc/nginx/sites-enabled/{{item}} state=link
-    with_items: nginx_vhosts
+  - name: Create virtual hosts in sites-available
+    template:
+      src: vhosts/{{item}}.j2
+      dest: /etc/nginx/sites-available/{{item}}
+    with_items: "{{nginx_vhosts}}"
+    notify:
+      - restart nginx
+
+  - name: Link virutal hosts to sites-enabled
+    file:
+      src: /etc/nginx/sites-available/{{item}}
+      dest: /etc/nginx/sites-enabled/{{item}}
+      state: link
+    with_items: "{{nginx_vhosts}}"
     notify:
       - restart nginx
 

@@ -1,8 +1,3 @@
 ---
   - name: restart nginx
     service: name=nginx state=restarted
-
-  # Currently not used because some changes can not be applied untill you run
-  # a full restart, see http://stackoverflow.com/a/25494893
-  - name: reload nginx
-    service: name=nginx state=reloaded
