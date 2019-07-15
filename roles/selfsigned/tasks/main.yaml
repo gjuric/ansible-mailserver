@@ -1,0 +1,12 @@
+---
+  - name: SSL | Install OpenSSL
+    apt: pkg=openssl state=present
+    tags: ssl
+
+  - name: SSL | Create SSL key
+    command: /usr/bin/openssl genrsa -out /etc/ssl/private/{{ hostname_fqdn }}.key 2048 creates=/etc/ssl/private/{{ hostname_fqdn }}.key
+    tags: ssl
+  
+  - name: SSL | Create SSL certificate
+    command: /usr/bin/openssl req -new -x509 -key /etc/ssl/private/{{ hostname_fqdn }}.key -out /etc/ssl/private/{{ hostname_fqdn }}.crt -days 3650 -subj /CN={{ hostname_fqdn }} creates=/etc/ssl/private/{{ hostname_fqdn }}.crt
+    tags: ssl
