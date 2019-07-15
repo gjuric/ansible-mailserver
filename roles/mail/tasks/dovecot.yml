@@ -1,40 +1,77 @@
 ---
   - name: dovecot | Install Dovecot
-    apt: pkg={{ item }} state=present
-    with_items:
-      - dovecot-core
-      - dovecot-mysql
-      - dovecot-imapd
-      - dovecot-sieve
-      - dovecot-managesieved
+    apt: 
+      pkg:
+        - dovecot-core
+        - dovecot-mysql
+        - dovecot-imapd
+        - dovecot-sieve
+        - dovecot-managesieved
+      state: present
 
   - name: dovecot | Create vmail group
-    group: name=vmail gid=5000 state=present
+    group:
+      name: vmail
+      gid: 5000
+      state: present
 
   - name: dovecot | Create vmail user
-    user: name=vmail comment="Virtual Mail" uid=5000 group=vmail createhome=no home=/srv/mail shell=/usr/sbin/nologin
+    user: 
+      name: vmail
+      comment: "Virtual Mail"
+      uid: 5000
+      group: vmail
+      createhome: no
+      home: /srv/mail
+      shell: /usr/sbin/nologin
 
   - name: dovecot | Create vmail users home folder
-    file: path=/srv/mail owner=vmail group=vmail state=directory
+    file:
+      path: /srv/mail
+      owner: vmail
+      group: vmail
+      state: directory
 
   - name: dovecot | Create domains folder for mail
-    file: path=/srv/mail/domains owner=vmail group=vmail state=directory
+    file:
+      path: /srv/mail/domains
+      owner: vmail
+      group: vmail
+      state: directory
 
   - name: dovecot | Create MySQL user
-    mysql_user: name={{ dovecot_db_username }} password={{ dovecot_db_password }} priv={{ mail_db_name }}.*:ALL state=present
+    mysql_user:
+      name: "{{ dovecot_db_username }}"
+      password: "{{ dovecot_db_password }}"
+      priv: "{{ mail_db_name }}.*:ALL"
+      state: present
 
   - name: dovecot | Delete default Dovecot public key
-    file: path=/etc/dovecot/dovecot.pem state=absent
+    file:
+      path: /etc/dovecot/dovecot.pem
+      state: absent
 
   - name: dovecot | Delete default Dovecot private keys
-    file: path=/etc/dovecot/private state=absent
+    file: 
+      path: /etc/dovecot/private
+      state: absent
 
   - name: dovecot | Configure Dovecot 1/3
-    template: src=dovecot/dovecot.conf dest=/etc/dovecot/dovecot.conf mode=0644 owner=root group=root
+    template:
+      src: dovecot/dovecot.conf
+      dest: /etc/dovecot/dovecot.conf
+      mode: 0644
+      owner: root
+      group: root
     notify: restart dovecot
 
   - name: dovecot | Configure Dovecot 2/3
-    template: src=dovecot/{{ item }} dest=/etc/dovecot/{{ item }} mode=0640 owner=root group=dovecot
+    template:
+      src: dovecot/{{ item }}
+      dest: /etc/dovecot/{{ item }}
+      mode: 0640
+      owner: root
+      group: dovecot
     with_items:
       - dovecot-dict-sql.conf.ext
       - dovecot-sql.conf.ext
@@ -44,7 +81,6 @@
     template: src=dovecot/conf.d/{{ item }} dest=/etc/dovecot/conf.d/{{ item }} mode=0644 owner=root group=root
     with_items:
       - 10-auth.conf
-      - 10-logging.conf
       - 10-mail.conf
       - 10-master.conf
       - 10-ssl.conf

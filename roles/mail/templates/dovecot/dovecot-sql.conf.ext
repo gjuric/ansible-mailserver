@@ -1,3 +1,6 @@
+# This file is commonly accessed via passdb {} or userdb {} section in
+# conf.d/auth-sql.conf.ext
+
 # This file is opened as root, so it should be owned by root and mode 0600.
 #
 # http://wiki2.dovecot.org/AuthDatabase/SQL
@@ -34,7 +37,7 @@ driver = mysql
 # settings, like: host=sql1.host.org host=sql2.host.org
 #
 # pgsql:
-#   For available options, see the PostgreSQL documention for the
+#   For available options, see the PostgreSQL documentation for the
 #   PQconnectdb function of libpq.
 #   Use maxconns=n (default 5) to change how many connections Dovecot can
 #   create to pgsql.
@@ -44,14 +47,19 @@ driver = mysql
 #     host, port, user, password, dbname
 #
 #   But also adds some new settings:
-#     client_flags        - See MySQL manual
-#     ssl_ca, ssl_ca_path - Set either one or both to enable SSL
-#     ssl_cert, ssl_key   - For sending client-side certificates to server
-#     ssl_cipher          - Set minimum allowed cipher security (default: HIGH)
-#     option_file         - Read options from the given file instead of
-#                           the default my.cnf location
-#     option_group        - Read options from the given group (default: client)
-#
+#     client_flags           - See MySQL manual
+#     connect_timeout        - Connect timeout in seconds (default: 5)
+#     read_timeout           - Read timeout in seconds (default: 30)
+#     write_timeout          - Write timeout in seconds (default: 30)
+#     ssl_ca, ssl_ca_path    - Set either one or both to enable SSL
+#     ssl_cert, ssl_key      - For sending client-side certificates to server
+#     ssl_cipher             - Set minimum allowed cipher security (default: HIGH)
+#     ssl_verify_server_cert - Verify that the name in the server SSL certificate
+#                              matches the host (default: no)
+#     option_file            - Read options from the given file instead of
+#                              the default my.cnf location
+#     option_group           - Read options from the given group (default: client)
+# 
 #   You can connect to UNIX sockets by using host: host=/var/run/mysql.sock
 #   Note that currently you can't use spaces in parameters.
 #
@@ -91,7 +99,7 @@ default_pass_scheme = SHA512-CRYPT
 #   %u = entire user@domain
 #   %n = user part of user@domain
 #   %d = domain part of user@domain
-#
+# 
 # Note that these can be used only as input to SQL query. If the query outputs
 # any of these substitutions, they're not touched. Otherwise it would be
 # difficult to have eg. usernames containing '%' characters.

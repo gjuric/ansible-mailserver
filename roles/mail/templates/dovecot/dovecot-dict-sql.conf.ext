@@ -1,3 +1,5 @@
+# This file is commonly accessed via dict {} section in dovecot.conf
+
 connect = host={{ mail_db_host }} dbname={{ mail_db_name }} user={{ dovecot_db_username }} password={{ dovecot_db_password }}
 
 # CREATE TABLE quota (
