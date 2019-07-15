@@ -1,6 +1,0 @@
----
-  - include: amavis.yml
-  - include: postfix.yml
-  - include: dovecot.yml
-  - include: sqlgrey.yml
-  - include: iptables.yml

@@ -1,0 +1,6 @@
+---
+  - include: amavis.yaml
+  - include: postfix.yaml
+  - include: dovecot.yaml
+  - include: sqlgrey.yaml
+  - include: iptables.yaml

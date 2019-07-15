@@ -1,0 +1,7 @@
+---
+  - include: postfix.yaml
+  - include: amavis.yaml
+  - include: dovecot.yaml
+  - include: sqlgrey.yaml
+    when: greylisting == 1
+  - include: iptables.yaml
