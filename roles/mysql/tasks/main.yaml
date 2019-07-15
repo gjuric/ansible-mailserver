@@ -1,0 +1,20 @@
+---
+  - name: Install mysql
+    apt:
+      pkg: default-mysql-server
+      state: present
+
+  - name: Make sure the service is running
+    service:
+      name: mysql
+      state: started
+      enabled: yes
+
+    # So Ansible can manage Mysql databases and users
+  - name: Install python-mysqldb
+    apt:
+      pkg: python-mysqldb
+      state: present
+    tags: mysql
+
+#TODO: set mysqls root password
