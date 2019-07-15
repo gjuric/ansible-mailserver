@@ -1,12 +1,18 @@
 ---
   - name: Install iptables and iptables-persistent
-    apt: pkg={{ item }} state=present
-    with_items:
-      - iptables
-      - iptables-persistent
+    apt:
+      pkg: 
+        - iptables
+        - iptables-persistent
+      state: present
 
   - name: Create /usr/local/bin/firewall
-    template: src=firewall.j2 dest=/usr/local/bin/firewall mode=0700 owner=root group=root
+    template:
+      src: firewall.j2
+      dest: /usr/local/bin/firewall
+      mode: 0700
+      owner: root
+      group: root
     notify:
       - run firewall script
  
