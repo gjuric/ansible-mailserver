@@ -1,22 +1,24 @@
 ---
   - name: amavisd-new | Install amavisd-new, SpamAssassin and ClamAV
-    apt: pkg={{ item }} state=present
-    with_items:
-      - amavisd-new
-      - spamassassin
+    apt:
+      pkg:
+        - amavisd-new
+        - spamassassin
 # cat spam.txt |pyzor 
 #      - pyzor
 # http://wiki.apache.org/spamassassin/RazorAmavisd
 # http://wiki.apache.org/spamassassin/RazorSiteWide
 #      - razor
-      - clamav-daemon
-      - libmail-dkim-perl
+        - clamav-daemon
+        - libmail-dkim-perl
+      state: present
 
   # For 'rar', 'unrar' and 'lha' you need to add contrib and non-free repositories 
   # (and also edit amavis config files)
   - name: amavisd-new | Install unpack utilites
-    apt: pkg={{ item }} state=present
-    with_items: ['arj', 'bzip2', 'cabextract', 'cpio', 'file', 'gzip', 'nomarch', 'pax', 'unzip', 'zip', 'zoo']
+    apt: 
+      pkg: ['arj', 'bzip2', 'cabextract', 'cpio', 'file', 'gzip', 'nomarch', 'pax', 'unzip', 'zip']
+      state: present
 
   - name: amavisd-new | Add user clamav to amavis group
     user: name=clamav groups=amavis append=yes
@@ -34,15 +36,25 @@
     notify: restart amavis
 
   - name: amavisd-new | Enable spam and virus checks
-    template: src=amavis/conf.d/15-content_filter_mode.j2 dest=/etc/amavis/conf.d/15-content_filter_mode mode=0644 owner=root group=root
+    template: 
+      src: amavis/conf.d/15-content_filter_mode.j2
+      dest: /etc/amavis/conf.d/15-content_filter_mode
+      mode: 0644
+      owner: root
+      group: root
     notify: restart amavis
 
   - name: amavisd-new | Configure amavis
-    template: src=amavis/conf.d/50-user.j2 dest=/etc/amavis/conf.d/50-user mode=0644 owner=root group=root
+    template:
+      src: amavis/conf.d/50-user.j2
+      dest: /etc/amavis/conf.d/50-user
+      mode: 0644
+      owner: root
+      group: root
     notify: restart amavis
 
   - name: amavisd-new | Create mysql database
-    mysql_db: name={{ amavis_db_name }} encoding=utf8 collation=utf8_unicode_ci state=present
+    mysql_db: name={{ amavis_db_name }} encoding=utf8mb4 collation=utf8mb4_bin state=present
     notify: 
       - copy amavis sql
       - run amavis import
@@ -68,13 +80,9 @@
 #  - name: amavisd-new | Run showkeys
 #    command: /usr/sbin/amavisd-new showkeys
 #    register: amavisd_keys
-#
+
 #  - name: amavisd-new | Display DKIM keys
 #    debug: var=amavisd_keys.stdout_lines
-
-# Spamassassin daemon is disabled by default
-#  - name: amavisd-new | Stop and disable spamassassin service
-#    service: name=spamassassin state=stopped enabled=no
   
 # To enable AWL edit /etc/spamassassin/v310.pre and uncomment:
 # loadplugin Mail::SpamAssassin::Plugin::AWL

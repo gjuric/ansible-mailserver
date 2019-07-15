@@ -41,8 +41,6 @@ CREATE TABLE policy (
   bypass_banned_checks  char(1) default NULL,     -- Y/N
   bypass_header_checks  char(1) default NULL,     -- Y/N
 
-  spam_modifies_subj    char(1) default NULL,     -- Y/N
-
   virus_quarantine_to      varchar(64) default NULL,
   spam_quarantine_to       varchar(64) default NULL,
   banned_quarantine_to     varchar(64) default NULL,
@@ -155,9 +153,9 @@ CREATE TABLE msgs (
   dsn_sent   char(1),                   -- was DSN sent? Y/N/q (q=quenched)
   spam_level float,                     -- SA spam level (no boosts)
   message_id varchar(255)  DEFAULT '',  -- mail Message-ID header field
-  from_addr  varchar(255)  CHARACTER SET utf8 COLLATE utf8_bin  DEFAULT '',
+  from_addr  varchar(255)  CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  DEFAULT '',
                                         -- mail From header field,    UTF8
-  subject    varchar(255)  CHARACTER SET utf8 COLLATE utf8_bin  DEFAULT '',
+  subject    varchar(255)  CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  DEFAULT '',
                                         -- mail Subject header field, UTF8
   host       varchar(255)  NOT NULL,    -- hostname where amavisd is running
   PRIMARY KEY (partition_tag,mail_id)
@@ -167,7 +165,10 @@ CREATE INDEX msgs_idx_sid      ON msgs (sid);
 CREATE INDEX msgs_idx_mess_id  ON msgs (message_id); -- useful with pen pals
 CREATE INDEX msgs_idx_time_num ON msgs (time_num);
 -- alternatively when purging based on time_iso (instead of msgs_idx_time_num):
--- CREATE INDEX msgs_idx_time_iso ON msgs (time_iso);
+--   CREATE INDEX msgs_idx_time_iso ON msgs (time_iso);
+-- When using FOREIGN KEY contraints, InnoDB requires index on a field
+-- (an the field must be the first field in the index).  Hence create it:
+--   CREATE INDEX msgs_idx_mail_id  ON msgs (mail_id);
 
 -- per-recipient information related to each processed message;
 -- NOTE: records in msgrcpt without corresponding msgs.mail_id record are
@@ -205,21 +206,28 @@ CREATE TABLE quarantine (
 -- FOREIGN KEY (mail_id) REFERENCES msgs(mail_id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+-- field msgrcpt.rs is primarily intended for use by quarantine management
+-- software; the value assigned by amavisd is a space;
+-- a short _preliminary_ list of possible values:
+--   'V' => viewed (marked as read)
+--   'R' => released (delivered) to this recipient
+--   'p' => pending (a status given to messages when the admin received the
+--                   request but not yet released; targeted to banned parts)
+--   'D' => marked for deletion; a cleanup script may delete it
+
 INSERT INTO policy (id, policy_name,
   virus_lover, spam_lover, banned_files_lover, bad_header_lover,
   bypass_virus_checks, bypass_spam_checks,
-  bypass_banned_checks, bypass_header_checks, spam_modifies_subj,
+  bypass_banned_checks, bypass_header_checks,
   spam_tag_level, spam_tag2_level, spam_kill_level) VALUES
-  (1, 'Non-paying',    'N','N','N','N', 'Y','Y','Y','N', 'Y', 3.0,   7, 10),
-  (2, 'Uncensored',    'Y','Y','Y','Y', 'N','N','N','N', 'N', 3.0, 999, 999),
-  (3, 'Wants all spam','N','Y','N','N', 'N','N','N','N', 'Y', 3.0, 999, 999),
-  (4, 'Wants viruses', 'Y','N','Y','Y', 'N','N','N','N', 'Y', 3.0, 6.9, 6.9),
-  (5, 'Normal',        'N','N','N','N', 'N','N','N','N', 'Y', 3.0, 6.9, 6.9),
-  (6, 'Trigger happy', 'N','N','N','N', 'N','N','N','N', 'Y', 3.0,   5, 5),
-  (7, 'Permissive',    'N','N','N','Y', 'N','N','N','N', 'Y', 3.0,  10, 20),
-  (8, '6.5/7.8',       'N','N','N','N', 'N','N','N','N', 'N', 3.0, 6.5, 7.8),
-  (9, 'userB',         'N','N','N','Y', 'N','N','N','N', 'Y', 3.0, 6.3, 6.3),
-  (10,'userC',         'N','N','N','N', 'N','N','N','N', 'N', 3.0, 6.0, 6.0),
-  (11,'userD',         'Y','N','Y','Y', 'N','N','N','N', 'N', 3.0,   7, 7);
-
-
+  (1, 'Non-paying',    'N','N','N','N', 'Y','Y','Y','N', 3.0,   7, 10),
+  (2, 'Uncensored',    'Y','Y','Y','Y', 'N','N','N','N', 3.0, 999, 999),
+  (3, 'Wants all spam','N','Y','N','N', 'N','N','N','N', 3.0, 999, 999),
+  (4, 'Wants viruses', 'Y','N','Y','Y', 'N','N','N','N', 3.0, 6.9, 6.9),
+  (5, 'Normal',        'N','N','N','N', 'N','N','N','N', 3.0, 6.9, 6.9),
+  (6, 'Trigger happy', 'N','N','N','N', 'N','N','N','N', 3.0,   5, 5),
+  (7, 'Permissive',    'N','N','N','Y', 'N','N','N','N', 3.0,  10, 20),
+  (8, '6.5/7.8',       'N','N','N','N', 'N','N','N','N', 3.0, 6.5, 7.8),
+  (9, 'userB',         'N','N','N','Y', 'N','N','N','N', 3.0, 6.3, 6.3),
+  (10,'userC',         'N','N','N','N', 'N','N','N','N', 3.0, 6.0, 6.0),
+  (11,'userD',         'Y','N','Y','Y', 'N','N','N','N', 3.0,   7, 7);
