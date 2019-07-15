@@ -1,27 +1,38 @@
 ---
-  - name: PHP5 | Install PHP packages
-    apt: pkg={{ item }} state=present
-    with_items:
-      - php5-cli
-      - php5-fpm
-      - php5-curl
-      - php5-mysqlnd
-      - php5-intl
-      - php5-mcrypt
-      - php-apc
+  - name: Install PHP packages
+    apt:
+      state: present
+      pkg:
+        - php7.3-cli
+        - php7.3-fpm
+        - php7.3-curl
+        - php7.3-mysqlnd
+        - php7.3-intl
 
-  - name: PHP5 | Set custom PHP settings
-    template: src=custom.ini.j2 dest=/etc/php5/mods-available/custom.ini mode=0644
+  - name: Set custom PHP settings
+    template:
+      src: custom.ini.j2
+      dest: /etc/php/7.3/mods-available/custom.ini
+      mode: 0644
     notify:
-      - restart php5-fpm
+      - restart php
 
-  - name: PHP5 | Link FPM conf.d to custom PHP settings
-    action: file src=/etc/php5/mods-available/custom.ini dest=/etc/php5/fpm/conf.d/99-custom.ini state=link
+  - name: Link FPM conf.d to custom PHP settings
+    file:
+      src: /etc/php/7.3/mods-available/custom.ini
+      dest: /etc/php/7.3/fpm/conf.d/99-custom.ini
+      state: link
     notify:
-      - restart php5-fpm
+      - restart php
 
-  - name: PHP5 | Link CLI conf.d to custom PHP settings
-    action: file src=/etc/php5/mods-available/custom.ini dest=/etc/php5/cli/conf.d/99-custom.ini state=link
+  - name: Link CLI conf.d to custom PHP settings
+    file:
+      src: /etc/php/7.3/mods-available/custom.ini
+      dest: /etc/php/7.3/cli/conf.d/99-custom.ini
+      state: link
 
-  - name: Start php5-fpm service
-    service: name=php5-fpm state=started enabled=yes
+  - name: Start PHP-FPM service
+    service:
+      name: php7.3-fpm
+      state: started
+      enabled: yes
