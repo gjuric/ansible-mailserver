@@ -8,6 +8,7 @@
         - php7.3-curl
         - php7.3-mysqlnd
         - php7.3-intl
+        - php7.3-dom
 
   - name: Set custom PHP settings
     template:
