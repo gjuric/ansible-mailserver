@@ -10,3 +10,8 @@
   - name: SSL | Create SSL certificate
     command: /usr/bin/openssl req -new -x509 -key /etc/ssl/private/{{ hostname_fqdn }}.key -out /etc/ssl/private/{{ hostname_fqdn }}.crt -days 3650 -subj /CN={{ hostname_fqdn }} creates=/etc/ssl/private/{{ hostname_fqdn }}.crt
     tags: ssl
+
+  - name: Create dhparam.pem file in /etc/ssl/private/
+    command: /usr/bin/openssl dhparam -out /etc/ssl/private/dhparam.pem 4096
+    args:
+      creates: /etc/ssl/private/dhparam.pem

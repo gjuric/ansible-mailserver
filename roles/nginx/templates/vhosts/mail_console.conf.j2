@@ -1,7 +1,7 @@
 # http://symfony.com/doc/current/cookbook/configuration/web_server_configuration.html
 server {
     listen       {{ mail_console_port }} ssl http2;
-    root         /srv/www/mail_console/current/web;
+    root         /srv/www/mailconsole/current/web;
 
     # SSL settings
     ssl_certificate      /etc/ssl/private/{{ hostname_fqdn }}.crt;
