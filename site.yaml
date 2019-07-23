@@ -3,6 +3,7 @@
   become: true
   vars_files:
     - settings.yaml
+    - settings_local.yaml
   roles:
     - { role: selfsigned, tags: selfsigned }
     - { role: hostname, tags: hostname }

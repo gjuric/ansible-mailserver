@@ -1,0 +1,20 @@
+hostname_host: mail
+hostname_domain: example.com
+hostname_fqdn: "{{hostname_host}}.{{hostname_domain}}"
+
+mail_db_password: TODO_changethispassword
+mailconsole_db_password: TODO_changethispassword
+amavis_db_password: TODO_changethispassword
+dovecot_db_password: TODO_changethispassword
+greylisting_db_password: TODO_changethispassword
+greylisting_web_password: TODO_changethispassword
+xmpp_db_password: TODO_changethispassword
+
+mail_dkim_signed_domains:
+  example.com:
+    selector: mail
+    cert: "/etc/amavis/dkim/example.com.pem"
+
+# Must be 24 characters long
+# This key is used to encrypt the users imap password before storing in the session record
+roundcube_des_key: zDyszr8=ze_w+vNLFfdDuq8j
