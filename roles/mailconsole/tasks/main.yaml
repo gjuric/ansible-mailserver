@@ -1,0 +1,23 @@
+---
+  - name: Install git
+    apt:
+      pkg: git
+      state: present
+
+  - name: Install acl
+    apt: pkg=acl state=present
+
+  - name: Create system user
+    user:
+      name: mailconsole
+      shell: /bin/bash
+      comment: MailConsole user
+      uid: 2000
+      home: /srv/www/mailconsole
+
+  - name: Create mysql user
+    mysql_user:
+      name: "{{ mailconsole_db_username }}"
+      password: "{{ mailconsole_db_password }}"
+      priv: "{{ mail_db_name }}.*:ALL"
+      state: present

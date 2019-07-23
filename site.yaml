@@ -12,6 +12,7 @@
     - { role: mail, tags: mail }
     - { role: nginx, tags: nginx }
     - { role: php, tags: php }
+    - { role: mailconsole, tags: mailconsole }
 
 #    - { role: roundcube, tags: roundcube }
 #    - { role: sqlgrey_webui, tags: sqlgrey_webui, when: greylisting == 1 }

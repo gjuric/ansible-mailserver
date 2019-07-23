@@ -9,32 +9,59 @@
       state: present
 
   - name: postfix | Set /etc/mailname to FQDN
-    template: src=mailname.j2 dest=/etc/mailname mode=0644 owner=root group=root
+    template:
+      src: mailname.j2
+      dest: /etc/mailname
+      mode: 0644
+      owner: root
+      group: root
 
   - name: postfix | Setup main.cf
-    template: src=postfix/main.cf.j2 dest=/etc/postfix/main.cf mode=0644 owner=root group=root
+    template:
+      src: postfix/main.cf.j2
+      dest: /etc/postfix/main.cf
+      mode: 0644
+      owner: root
+      group: root
     notify:
       - restart postfix
 
   - name: postfix | Setup master.cf
-    template: src=postfix/master.cf.j2 dest=/etc/postfix/master.cf mode=0644 owner=root group=root
+    template:
+      src: postfix/master.cf.j2
+      dest: /etc/postfix/master.cf
+      mode: 0644
+      owner: root
+      group: root
     notify:
       - restart postfix
 
   - name: postfix | Create mime_header_checks
-    template: src=postfix/mime_header_checks.regexp.j2 dest=/etc/postfix/mime_header_checks.regexp mode=0644 owner=root group=root
+    template:
+      src: postfix/mime_header_checks.regexp.j2
+      dest: /etc/postfix/mime_header_checks.regexp
+      mode: 0644
+      owner: root
+      group: root
     when: mail_banned_attachments|length > 0
     notify:
       - restart postfix
 
   - name: postfix | Create smtp_header_checks
-    template: src=postfix/smtp_header_checks.pcre dest=/etc/postfix/smtp_header_checks.pcre owner=root group=root mode=0644
+    template:
+      src: postfix/smtp_header_checks.pcre
+      dest: /etc/postfix/smtp_header_checks.pcre
+      owner: root
+      group: root
+      mode: 0644
     when: mail_hide_users_ip == 1
     notify:
       - restart postfix
 
   - name: postfix | Create /etc/postfix/sql
-    file: path=/etc/postfix/sql state=directory
+    file:
+      path: /etc/postfix/sql
+      state: directory
 
   - name: postfix | Create virtual SQL maps files
     template: src=postfix/sql/{{ item }}.j2 dest=/etc/postfix/sql/{{ item }} owner=root group=postfix mode=0640
@@ -48,11 +75,19 @@
       - restart postfix
 
   - name: postfix | Create mysql database
-    mysql_db: name={{ mail_db_name }} encoding=utf8 collation=utf8_unicode_ci state=present
+    mysql_db:
+      name: "{{ mail_db_name }}"
+      encoding: utf8
+      collation: utf8_unicode_ci
+      state: present
     notify: 
       - copy postfix sql
       - run postfix import
 
   - name: postfix | Create mysql user
-    mysql_user: name={{ mail_db_username }} password={{ mail_db_password }} priv={{ mail_db_name }}.*:SELECT state=present
+    mysql_user:
+      name: "{{ mail_db_username }}"
+      password: "{{ mail_db_password }}"
+      priv: "{{ mail_db_name }}.*:SELECT"
+      state: present
   
