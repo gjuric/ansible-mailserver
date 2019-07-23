@@ -9,6 +9,9 @@
         - php7.3-mysqlnd
         - php7.3-intl
         - php7.3-dom
+        - php7.3-mbstring #Roundube
+        - php7.3-gd #Roundube
+        - php-imagick #Roundube
 
   - name: Set custom PHP settings
     template:

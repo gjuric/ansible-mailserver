@@ -14,7 +14,7 @@
     - { role: nginx, tags: nginx }
     - { role: php, tags: php }
     - { role: mailconsole, tags: mailconsole }
+    - { role: roundcube, tags: roundcube }
 
-#    - { role: roundcube, tags: roundcube }
 #    - { role: sqlgrey_webui, tags: sqlgrey_webui, when: greylisting == 1 }
 #    - { role: prosody, tags: prosody, when: xmpp == 1 }

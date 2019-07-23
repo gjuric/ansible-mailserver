@@ -1,23 +1,38 @@
 ---
   - name: Download Roundcube {{ roundcube_version }}
     get_url:
-      url: http://downloads.sourceforge.net/project/roundcubemail/roundcubemail/{{ roundcube_version }}/roundcubemail-{{ roundcube_version }}.tar.gz?r=&ts=1415714242&use_mirror=kent
-      dest: /usr/local/src/roundcube-{{ roundcube_version }}.tar.gz
+      url: 
+        https://github.com/roundcube/roundcubemail/releases/download/{{ roundcube_version }}/roundcubemail-{{ roundcube_version }}-complete.tar.gz
+      dest:
+        /usr/local/src/roundcube-{{ roundcube_version }}.tar.gz
 
   - name: Create /srv/www/public/webmail
-    file: path=/srv/www/public/webmail state=directory
+    file:
+      path: /srv/www/public/webmail
+      state: directory
 
   - name: Unpack Roundcube
-    command: tar --strip-components=1 --keep-old-files -xzf /usr/local/src/roundcube-{{ roundcube_version }}.tar.gz -C /srv/www/public/webmail creates=/srv/www/public/webmail/index.php
-    # unarchive: src=/usr/local/src/roundcube-{{ roundcube_version }}.tar.gz dest=/usr/local/src/ copy=no
+    unarchive:
+      src: /usr/local/src/roundcube-{{ roundcube_version }}.tar.gz
+      remote_src: yes
+      dest: /srv/www/public/webmail
+      extra_opts: "--strip-components=1"
 
   - name: Create mysql database
-    mysql_db: name={{ roundcube_db_name }} encoding=utf8 collation=utf8_unicode_ci state=present
+    mysql_db:
+      name: "{{ roundcube_db_name }}"
+      encoding: utf8
+      collation: utf8_unicode_ci
+      state: present
     notify: 
       - run roundcube import
 
   - name: Create mysql user
-    mysql_user: name={{ roundcube_db_username }} password={{ roundcube_db_password }} priv={{ roundcube_db_name }}.*:ALL state=present
+    mysql_user: 
+      name: "{{ roundcube_db_username }}"
+      password: "{{ roundcube_db_password }}"
+      priv: "{{ roundcube_db_name }}.*:ALL"
+      state: present
 
   - name: Fail if DES key is not 24 character long
     fail: msg="Variable roundcube_des_key must be 24 characters long"
@@ -27,5 +42,14 @@
     template: src=config.inc.php dest=/srv/www/public/webmail/config/config.inc.php
     when: (roundcube_des_key|length) == 24
 
+  - name: Set ownership of the temp folder
+    file:
+      path: /srv/www/public/webmail/temp/
+      state: directory
+      owner: www-data
+      group: www-data
+
   - name: Delete installer folder
-    file: path=/srv/www/public/webmail/installer state=absent
+    file:
+      path: /srv/www/public/webmail/installer
+      state: absent
