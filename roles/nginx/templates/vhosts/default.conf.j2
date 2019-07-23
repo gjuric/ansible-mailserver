@@ -1,6 +1,15 @@
 server {
     listen       80 default;
-    return       301 https://$host$request_uri;
+
+    # Needed for LetsEncrypt ACME challenge
+    location ~ /\.well-known/acme-challenge/ {
+        root /srv/www/public;
+    }
+
+    # Redirect all other requests to https
+    location / {
+        return 301 https://$host$request_uri;
+    }
 }
 
 server {
