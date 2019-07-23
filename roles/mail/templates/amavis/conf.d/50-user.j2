@@ -48,10 +48,16 @@ $final_bad_header_destiny = D_PASS;     # False-positive prone (for spam)
 $enable_dkim_signing = 1;
 $enable_dkim_verification = 1;
 
-{% for domain in mail_dkim_signend_domains %}
-dkim_key('{{ domain }}', 'mail', '/etc/amavis/dkim/{{ hostname_fqdn }}.pem');
-{% endfor %}
+{% if mail_hide_users_ip == 1 %}
+# Since we are stripping headers in Postfix we mus not sign them
+$signed_header_fields{'received'} = 0; # turn off signing of Received
+$signed_header_fields{'to'} = 1; # turn on signing of To
+{% endif %}
 
+{% for domain in mail_dkim_signed_domains %}
+{% set data = mail_dkim_signed_domains[domain]%}
+dkim_key('{{ domain }}', '{{data['selector']}}', '{{data['cert']}}');
+{% endfor %}
 
 # Sockets
 
