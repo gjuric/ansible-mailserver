@@ -33,8 +33,9 @@ iptables -A OUTPUT -o lo -j ACCEPT
 ## (this allows other people to ping your machine, among other things),
 iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
 #
-## Accept ssh (port 22)
-iptables -A INPUT -p tcp -m tcp --syn --dport 22 -j ACCEPT
+## Accept ssh (port {{ssh_port}})
+iptables -A INPUT -p tcp -m tcp --syn --dport {{ssh_port}} -j ACCEPT
+
 #
 ## Accept smtp (port 25 | 587)
 iptables -A INPUT -p tcp -m tcp --syn --dport 25 -j ACCEPT

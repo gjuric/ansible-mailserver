@@ -1,1 +1,4 @@
 settings_local.yaml
+*.retry
+hosts
+

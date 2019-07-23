@@ -1,3 +1,5 @@
+ssh_port: 22
+
 hostname_host: mail
 hostname_domain: example.com
 hostname_fqdn: "{{hostname_host}}.{{hostname_domain}}"
