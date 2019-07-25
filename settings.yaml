@@ -46,7 +46,6 @@ roundcube_db_name: mail_roundcube
 roundcube_db_host: 127.0.0.1
 roundcube_db_port: 3306
 roundcube_db_username: roundcube
-roundcube_db_password: TODO_changethispassword
 
 nginx_vhosts:
   - default.conf

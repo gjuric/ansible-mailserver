@@ -20,3 +20,4 @@ mail_dkim_signed_domains:
 # Must be 24 characters long
 # This key is used to encrypt the users imap password before storing in the session record
 roundcube_des_key: zDyszr8=ze_w+vNLFfdDuq8j
+roundcube_db_password: TODO_changethispassword
