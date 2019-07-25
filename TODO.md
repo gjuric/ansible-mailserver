@@ -41,6 +41,11 @@
     - http://wiki.apache.org/spamassassin/RazorAmavisd
 
 
+## Postfix
+
+    - allow specifying the port MySQL is listening
+
+
 ## General
 
     - see what to do with mail to local users (amavis, root, ...)

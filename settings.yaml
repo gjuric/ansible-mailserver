@@ -18,7 +18,7 @@ mail_log_tls_usage: 1
 
 mail_db_name: mail
 mail_db_host: 127.0.0.1
-mail_db_port: 3306
+#mail_db_port: 3306 # Unused at the moment
 mail_db_username: postfix
 
 mailconsole_db_username: mailconsole
