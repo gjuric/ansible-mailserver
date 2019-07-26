@@ -46,7 +46,8 @@ iptables -A INPUT -p tcp -m tcp --syn --dport 80 -j ACCEPT
 iptables -A INPUT -p tcp -m tcp --syn --dport 443 -j ACCEPT
 iptables -A INPUT -p tcp -m tcp --syn --dport 10000 -j ACCEPT
 #
-## Accept imaps (port 993)
+## Accept imap and imaps (port 143 & 993)
+iptables -A INPUT -p tcp -m tcp --syn --dport 143 -j ACCEPT
 iptables -A INPUT -p tcp -m tcp --syn --dport 993 -j ACCEPT
 #
 ## Accept XMPP (ports 5222 & 5269)

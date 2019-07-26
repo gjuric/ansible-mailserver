@@ -17,7 +17,7 @@
       remote_src: yes
       dest: /srv/www/public/webmail
       extra_opts: "--strip-components=1"
-      creates: /srv/www/public/wemail/index.php
+      creates: /srv/www/public/webmail/index.php
 
   - name: Create mysql database
     mysql_db:
